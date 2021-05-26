@@ -4,13 +4,13 @@ module.exports.config = {
     hasPermssion: 0,
     credits: "MewMew",
     description: "Tin tức trên vnexpress.net",
-    commandCategory: "general",
+    commandCategory: "news",
     usages: "news [từ khóa]",
     cooldowns: 5,
     dependencies: ["cheerio", "axios"]
 };
 
-module.exports.run = async function({ api, event, args, client, __GLOBAL }) {
+module.exports.run = async function({ api, event, args }) {
     const axios = require("axios");
     const https = require("https");
     const cheerio = require("cheerio");

@@ -1,5 +1,5 @@
 module.exports.config = {
-	name: "leaveEvents",
+	name: "leave",
 	eventType: ["log:unsubscribe"],
 	version: "1.0.0",
 	credits: "SpermLord",
@@ -7,16 +7,11 @@ module.exports.config = {
 };
 
 module.exports.run = async function({ api, event, Users, Threads, client }) {
-	let name, msg, formPush
-	const { createReadStream, existsSync, mkdirSync } = require("fs-extra");;
-	let settings = client.threadSetting.get(event.threadID) || {};//(await Threads.getData(event.threadID)).settings;
-	try {
-		name = (await Users.getData(event.logMessageData.leftParticipantFbId)).name;
-		if (typeof name == "undefined") throw Error();	
-	}
-	catch {
-		name = (await api.getUserInfo(event.logMessageData.leftParticipantFbId))[event.logMessageData.leftParticipantFbId].name;
-	}
+	let msg, formPush
+	const { createReadStream, existsSync, mkdirSync } = require("fs-extra");
+	if (event.logMessageData.leftParticipantFbId == api.getCurrentUserID()) return;
+	let settings = client.threadSetting.get(event.threadID) || {};
+	let name = (await Users.getData(event.logMessageData.leftParticipantFbId)).name || (await api.getUserInfo(event.logMessageData.leftParticipantFbId))[event.logMessageData.leftParticipantFbId].name
 	let type = (event.author == event.logMessageData.leftParticipantFbId) ? "tự rời" : "bị quản trị viên đá";
 	(typeof settings.customLeave == "undefined") ? msg = "{name} Đã {type} khỏi nhóm" : msg = settings.customLeave;
 	msg = msg
